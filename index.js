@@ -16,4 +16,16 @@ const tareas = [
 app.get('/api/todos', function(req, res){
     res.json(tareas)
 })
+
+app.delete('/api/todos/:id', function(req, res){
+    const id = parseInt(req.params.todoId)
+
+    for(let i=0; i<tareas.length; i++){
+        if(tareas[i]=== id){
+            tareas.splice(i,1)
+        }
+    }
+
+    res.json(tareas)
+})
 app.listen(3000)
