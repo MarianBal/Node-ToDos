@@ -30,3 +30,35 @@ function eliminar (e){
     fetch(`${dire}/${id}`,{method:'delete'})
     .then(res=>document.getElementById(id).remove())
 }
+
+document.getElementById('tareaNueva').onsubmit = e =>{
+    e.preventDefault();
+
+    const texto = document.querySelector('#input').value;
+
+    const todoNuevo = {
+        texto: texto,
+        completada: false,
+    }
+
+    fetch(dire, { 
+        method: 'POST',
+        body: JSON.stringify(todoNuevo),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.json())
+      .then(todo => {
+        const nuevaTarea= `
+        <li id='${todo.id}'>
+        ${todo.tarea} <span>${todo.completada}</span>
+        <button>Eliminar</button>
+        </li>`
+    
+    
+        document.querySelector('ul').innerHTML += nuevaTarea;
+    
+      })
+    
+    }

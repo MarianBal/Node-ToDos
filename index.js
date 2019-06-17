@@ -28,4 +28,19 @@ app.delete('/api/todos/:id', function(req, res){
 
     res.json(tareas)
 })
+
+let id = 7;
+
+app.post('/api/todos', function (req, res) {
+
+    const nuevoTodo = req.body; 
+    console.log(nuevoTodo)
+//     nuevoTodo.id=id++;
+
+//     tareas.push(nuevoTodo);
+
+//     res.json(nuevoTodo);
+})
+   
+
 app.listen(3000)
