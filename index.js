@@ -31,16 +31,29 @@ app.delete('/api/todos/:id', function(req, res){
 
 let id = 7;
 
-app.post('/api/todos', function (req, res) {
+app.post('/api/todos', function(req, res){
 
-    const nuevoTodo = req.body; 
-    console.log(nuevoTodo)
-//     nuevoTodo.id=id++;
+    const newToDo = req.body;
+    newToDo.id = id++;
 
-//     tareas.push(nuevoTodo);
+    console.log(newToDo)
 
-//     res.json(nuevoTodo);
+    tareas.push(nuevoTodo);
+
+    return res.json(nuevoTodo);
 })
-   
 
+app.put('/api/todos/:id/completar', function(req, res){
+
+    const id = req.params.id;
+
+    tareas.map(todo => {
+        
+        if(id == todo.id){
+
+            todo.completada = true;
+            return res.json(todo)
+        }
+    })
+})
 app.listen(3000)

@@ -10,8 +10,9 @@ fetch(dire)
 .then (function(tareas){
     const li = tareas.map(e=>{
         return`<li id='${e.id}'>
-            ${e.tarea} <span>${e.completada}</span>
-            <button>Eliminar</button>
+            ${e.tarea} <span class="estado">${e.completada}</span>
+            <button class="eliminar">Eliminar</button>
+            <button onclick="completar(${e.id}, this)"> completada</button>
             </li>`
     })
 
@@ -24,12 +25,32 @@ fetch(dire)
     })
 })
 
-function eliminar (e){
-    const id =  e.target.parentNode.id;
+function completar(id, button){
+    console.log(id, button)
+
+    fetch(`${dire}/${id}/completar`, {
+        method: 'put'
+    })
+    .then(res => res.json())
+    .then(todo=>{
+
+        const li =document.getElementById(`${id}`)
+
+        li
+            .querySelector('span.estado')
+            .innerHTML= todo.completada;
+
+    })
     
-    fetch(`${dire}/${id}`,{method:'delete'})
-    .then(res=>document.getElementById(id).remove())
 }
+
+// function eliminar (e){
+
+//      const id =  e.target.parentNode.id;
+    
+//     fetch(`${dire}/${id}`,{method:'delete'})
+//     .then(res=>document.getElementById(id).remove())
+// }
 
 document.getElementById('tareaNueva').onsubmit = e =>{
     e.preventDefault();
@@ -41,13 +62,13 @@ document.getElementById('tareaNueva').onsubmit = e =>{
         completada: false,
     }
 
-    fetch(dire, { 
-        method: 'POST',
+    fetch(dire, {
+        method: 'post',
         body: JSON.stringify(todoNuevo),
         headers: {
           'Content-Type': 'application/json'
         }
-      })
+    })
       .then(res => res.json())
       .then(todo => {
         const nuevaTarea= `
@@ -55,7 +76,6 @@ document.getElementById('tareaNueva').onsubmit = e =>{
         ${todo.tarea} <span>${todo.completada}</span>
         <button>Eliminar</button>
         </li>`
-    
     
         document.querySelector('ul').innerHTML += nuevaTarea;
     
