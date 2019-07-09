@@ -3,6 +3,7 @@ const cors = require('cors');
 
 const app = express();
 app.use(cors());
+app.use(express.json())
 
 const tareas = [
     {id:1, tarea:'tarea 1', completada:false},
@@ -18,7 +19,7 @@ app.get('/api/todos', function(req, res){
 })
 
 app.delete('/api/todos/:id', function(req, res){
-    const id = parseInt(req.params.todoId)
+    const id = parseInt(req.params.id)
 
     for(let i=0; i<tareas.length; i++){
         if(tareas[i]=== id){
@@ -38,9 +39,9 @@ app.post('/api/todos', function(req, res){
 
     console.log(newToDo)
 
-    tareas.push(nuevoTodo);
+    tareas.push(newToDo);
 
-    return res.json(nuevoTodo);
+    return res.json(newToDo);
 })
 
 app.put('/api/todos/:id/completar', function(req, res){
@@ -56,4 +57,32 @@ app.put('/api/todos/:id/completar', function(req, res){
         }
     })
 })
+
+app.put('/api/todos/:id', function (req, res) {
+    const todoId = req.params.id;
+    console.log(todoId)
+    const todoEditado = req.body; // pueden no llegar todas las propiedades del obj
+    console.log(todoEditado)
+  
+    // si no existe la propiedad texto de nuevoTodo
+    // O
+    // si la propiedad texto es un string vacio
+    if (!todoEditado.tarea || todoEditado.tarea.trim().length === 0) {
+      // un aviso
+      // un res
+      // return
+      // return res.status(400).end();
+      return res.status(400).send('salió todo mal');
+    }
+  
+    todos.forEach(function (todo) {
+      if (todoId == todo.id) {
+        todo.tarea = todoEditado.tarea;
+        todo.completada = todoEditado.completada;
+  
+        return res.json(todo);
+      }
+    });
+  });
+
 app.listen(3000)

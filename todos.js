@@ -2,29 +2,77 @@ console.log('Hola Mundo')
 
 const dire = 'http://localhost:3000/api/todos'
 
-fetch(dire)
-.then(function (res) {
-    return res.json()  
-})
+let listaTareas = [];
 
-.then (function(tareas){
-    const li = tareas.map(e=>{
-        return`<li id='${e.id}'>
-            ${e.tarea} <span class="estado">${e.completada}</span>
-            <button class="eliminar">Eliminar</button>
-            <button onclick="completar(${e.id}, this)"> completada</button>
-            </li>`
+// fetch(dire)
+// .then(function (res) {
+//     return res.json()  
+// })
+
+// .then (function(tareas){
+
+//     listaTareas = tareas;
+
+//     const li = tareas.map(e=>{
+//         return`<li id='${e.id}'> <span class="titulo">
+//             ${e.tarea}</span> <span class="estado">${e.completada}</span>
+//             <button class="eliminar">Eliminar</button>
+//             <button onclick="completar(${e.id}, this)"> completada</button>
+//             <button onclick="editar(${e.id}, this)"> Editar</button>
+
+//             </li>`
+//     })
+
+//     document.querySelector('ul').innerHTML = li.join('')
+
+//     document
+//     .querySelectorAll('li button')
+//     .forEach(boton=>{
+//         boton.onclick = eliminar;
+//     })
+// })
+function editar (id, button){
+    listaTareas.forEach(tarea=>{
+
+        if(tarea.id === id){
+            document
+                .querySelector('#input')
+                .value = tarea.tarea;
+            
+            document
+                .querySelector('#subir')
+                .style.display= 'none';
+
+            const botonEditar = document.querySelector('#editar')
+            botonEditar.style.display= 'block';
+
+            botonEditar.onclick = function(e){
+
+                e.preventDefault();
+
+                const texto = document.querySelector('#input').value;
+
+                const todoNuevo = {
+                    tarea: texto,
+                    completada: false,
+                }
+
+                fetch(`${dire}/${id}`, {
+                    method: 'put',
+                    body: JSON.stringify(todoNuevo),
+                    headers: {
+                        'Content-Type': 'application/json'
+                      }
+                })
+                .then(res=> res.json())
+                .then(data=>{
+
+                    button.parentNode.querySelector('span.titulo').innerHTML= todo.texto;   
+                })
+            }
+        }
     })
-
-    document.querySelector('ul').innerHTML = li.join('')
-
-    document
-    .querySelectorAll('li button')
-    .forEach(boton=>{
-        boton.onclick = eliminar;
-    })
-})
-
+}
 function completar(id, button){
     console.log(id, button)
 
@@ -58,7 +106,7 @@ document.getElementById('tareaNueva').onsubmit = e =>{
     const texto = document.querySelector('#input').value;
 
     const todoNuevo = {
-        texto: texto,
+        tarea: texto,
         completada: false,
     }
 
@@ -70,11 +118,13 @@ document.getElementById('tareaNueva').onsubmit = e =>{
         }
     })
       .then(res => res.json())
-      .then(todo => {
+      .then(e => {
+          console.log(e)
         const nuevaTarea= `
-        <li id='${todo.id}'>
-        ${todo.tarea} <span>${todo.completada}</span>
-        <button>Eliminar</button>
+        <li id='${e.id}'><span class="titulo">
+        ${e.tarea} </span><span>${e.completada}</span>
+        <button onclick="completar(${e.id}, this)"> completada</button>
+        <button onclick="editar(${e.id}, this)"> Editar</button>
         </li>`
     
         document.querySelector('ul').innerHTML += nuevaTarea;
