@@ -105,10 +105,14 @@ document.getElementById('tareaNueva').onsubmit = e =>{
 
     const texto = document.querySelector('#input').value;
 
+    if (texto.trim().length===0){ 
+        document.querySelector('#input').value = 'Dato no válido'
+    }else{
+
     const todoNuevo = {
         tarea: texto,
         completada: false,
-    }
+    };
 
     fetch(dire, {
         method: 'post',
@@ -130,5 +134,5 @@ document.getElementById('tareaNueva').onsubmit = e =>{
         document.querySelector('ul').innerHTML += nuevaTarea;
     
       })
-    
+    }
     }
